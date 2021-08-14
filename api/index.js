@@ -1,5 +1,5 @@
 require('dotenv').config()
-const puppeteer = require('puppeteer');
+const Pageres = require('pageres');
 const { Deta } = require("deta")
 
 const DETA_PROJECT_KEY = process.env.DETA_PROJECT_KEY
