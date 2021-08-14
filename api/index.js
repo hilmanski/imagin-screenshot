@@ -9,7 +9,13 @@ const imagekit = new ImageKit({
 });
 
 (async () => {
-    const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] })
+    const browser = await puppeteer.launch({ 
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: chromium.headless,
+        ignoreHTTPSErrors: true,
+    })
     const page = await browser.newPage();
     await page.goto('https://example.com');
 
