@@ -8,7 +8,8 @@
     "deta": "^1.0.0",
     "dotenv": "^10.0.0",
     "imagekit": "^3.2.0",
-    "puppeteer": "^10.2.0"
+    "puppeteer": "^10.2.0",
+    "unsplash-js": "^7.0.15"
   },
   "devDependencies": {},
   "scripts": {

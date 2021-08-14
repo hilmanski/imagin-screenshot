@@ -13,14 +13,13 @@ const imagekit = new ImageKit({
     urlEndpoint: process.env.imagekit_endpoint,
 });
 
-//Usage end:
-//get.thumbnailed.com?web=hilman.space&title=life%20is%20good
-
 module.exports = async(req, res) => {
     const { web, title } = req.query;
 
     const filename = title //must be dynamic depend on host
     const foldername = web.replace('.','-')
+
+    //Check DB if domain is not whitelisted, doesn't work!
 
     //Check if exists, no need to create again, just return the value (thumbnail URL)
     const db = deta.Base("thumbnails")
@@ -31,7 +30,7 @@ module.exports = async(req, res) => {
         return res.redirect(item.url)
     }
 
-    const ss_source_url = `https://thumbnailed-template.vercel.app?title=${title}`
+    const ss_source_url = `https://template.imagin.live?title=${title}`
 
     const browser = await puppeteer.launch({ 
         args: chromium.args,
