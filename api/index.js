@@ -1,5 +1,6 @@
 require('dotenv').config()
 const puppeteer = require('puppeteer');
+const chromium = require('chrome-aws-lambda');
 const ImageKit = require("imagekit");
 
 const imagekit = new ImageKit({
