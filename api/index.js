@@ -31,7 +31,7 @@ module.exports = async(req, res) => {
         return res.redirect(item.url)
     }
 
-    const ss_source_url = `http://localhost:5500/index.html?title=${title}`
+    const ss_source_url = `https://thumbnailed-template.vercel.app?title=${title}`
 
     const browser = await puppeteer.launch({ 
         args: chromium.args,
