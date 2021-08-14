@@ -1,5 +1,5 @@
 require('dotenv').config()
-const Pageres = require('pageres');
+const puppeteer = require('puppeteer');
 const ImageKit = require("imagekit");
 
 const imagekit = new ImageKit({
@@ -9,20 +9,23 @@ const imagekit = new ImageKit({
 });
 
 (async () => {
-    const imgBuffer = await new Pageres()
-        .src('https://google.com', ['1280x1024'])
-        //.src('data:text/html,<h1>Awesome!</h1>', ['1024x768'])
-        //.dest(__dirname)
-        .run();
-    
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto('https://example.com');
+
+    const options = { encoding: 'binary', type: 'png' };
+    const imgBuffer = await page.screenshot(options);
+
     const filename = "vercel.jpg"
 
     imagekit.upload({
-        file: imgBuffer[0], 
+        file: imgBuffer, 
         fileName: filename,   
     }).then(response => {
         console.log(response);
     }).catch(error => {
         console.log(error);
     });
+
+    await browser.close();
 })();
