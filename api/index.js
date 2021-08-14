@@ -1,24 +1,28 @@
 require('dotenv').config()
 const Pageres = require('pageres');
-const { Deta } = require("deta")
+const ImageKit = require("imagekit");
 
-const DETA_PROJECT_KEY = process.env.DETA_PROJECT_KEY
-const deta = Deta(DETA_PROJECT_KEY);
+const imagekit = new ImageKit({
+    publicKey: process.env.imagekit_public_key,
+    privateKey: process.env.imagekit_private_key,
+    urlEndpoint: process.env.imagekit_endpoint,
+});
 
 (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    const URL = 'https://sekolahkoding.com'
-    await page.goto(URL);
-
-    const options = { encoding: 'binary', type: 'png' };
-    const imageBuffer = await page.screenshot(options);
+    const imgBuffer = await new Pageres()
+        .src('https://google.com', ['1280x1024'])
+        //.src('data:text/html,<h1>Awesome!</h1>', ['1024x768'])
+        //.dest(__dirname)
+        .run();
     
-    //upload to Deta    
-    const detaDrive = deta.Drive("thumbnails");
-    const res = await detaDrive.put("new.png", { data: imageBuffer });
-    console.log(res)
+    const filename = "vercel.jpg"
 
-    await browser.close();
+    imagekit.upload({
+        file: imgBuffer[0], 
+        fileName: filename,   
+    }).then(response => {
+        console.log(response);
+    }).catch(error => {
+        console.log(error);
+    });
 })();
