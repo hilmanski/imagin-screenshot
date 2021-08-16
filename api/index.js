@@ -20,8 +20,8 @@ module.exports = async(req, res) => {
     const foldername = web.replace(/\./g,'-')
 
     //Check if exists, no need to create again, just return the value (thumbnail URL)
-    let db = deta.Base("thumbnails")
-    const { items } = await db.fetch({ foldername, filename})
+    const dbThumbnail = deta.Base("thumbnails")
+    const { items } = await dbThumbnail.fetch({ foldername, filename})
     
     if(items.length !== 0) {
         const item = items[0]
@@ -29,8 +29,8 @@ module.exports = async(req, res) => {
     }
 
     //Check DB if domain is not whitelisted
-    db = deta.Base("sites")
-    const { items: sites } = await db.fetch({ "sitename?contains": web })
+    const dbSite = deta.Base("sites")
+    const { items: sites } = await dbSite.fetch({ "sitename?contains": web })
     if (sites.length == 0)
         return res.status(403).json({ msg: 'your site is not allowed' })
         
@@ -60,7 +60,7 @@ module.exports = async(req, res) => {
         fileName: filename,   
     }).then(async function(response){
         //save to db
-        const uploadToDeta = await db.put({ foldername, filename, url: response.url})
+        const uploadToDeta = await dbThumbnail.put({ foldername, filename, url: response.url})
         return res.redirect(uploadToDeta.url)
 
     }).catch(error => {
