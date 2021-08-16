@@ -41,7 +41,7 @@ module.exports = async(req, res) => {
     })
     const page = await browser.newPage();
     await page.setViewport({ width: 500, height: 300 })
-    await page.goto(ss_source_url);
+    await page.goto(ss_source_url, { "waitUntil": "networkidle0" });
 
     const options = { encoding: 'binary', type: 'png' };
     const imgBuffer = await page.screenshot(options);
