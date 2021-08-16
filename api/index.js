@@ -17,7 +17,7 @@ module.exports = async(req, res) => {
     const { web, title } = req.query;
 
     const filename = title //must be dynamic depend on host
-    const foldername = web.replace('.','-')
+    const foldername = web.replace(/\./g,'-')
 
     //Check DB if domain is not whitelisted, doesn't work!
 
