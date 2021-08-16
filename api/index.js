@@ -16,13 +16,11 @@ const imagekit = new ImageKit({
 module.exports = async(req, res) => {
     const { web, title } = req.query;
 
-    const filename = title //must be dynamic depend on host
+    const filename = title
     const foldername = web.replace(/\./g,'-')
 
-    //Check DB if domain is not whitelisted, doesn't work!
-
     //Check if exists, no need to create again, just return the value (thumbnail URL)
-    const db = deta.Base("thumbnails")
+    let db = deta.Base("thumbnails")
     const { items } = await db.fetch({ foldername, filename})
     
     if(items.length !== 0) {
@@ -30,7 +28,15 @@ module.exports = async(req, res) => {
         return res.redirect(item.url)
     }
 
-    const ss_source_url = `https://template.imagin.live?title=${title}`
+    //Check DB if domain is not whitelisted
+    db = deta.Base("sites")
+    const { items: sites } = await db.fetch({ "sitename?contains": web })
+    if (sites.length == 0)
+        return res.status(403).json({ msg: 'your site is not allowed' })
+        
+
+    const extra_params = req.url.replace('/api?','')
+    const ss_source_url = `https://template.imagin.live?${extra_params}`
 
     const browser = await puppeteer.launch({ 
         args: chromium.args,
